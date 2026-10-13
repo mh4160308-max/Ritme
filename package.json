@@ -1,26 +1,35 @@
-{
-  "name": "ritme-daily-planner",
-  "version": "1.1.0",
-  "description": "Persian RTL daily planner with separate statistics and backup tools",
-  "main": "main.js",
-  "author": "Ritme",
-  "license": "UNLICENSED",
-  "scripts": {
-    "start": "electron .",
-    "dist": "electron-builder --win nsis portable"
-  },
-  "devDependencies": {
-    "electron": "^38.2.0",
-    "electron-builder": "^26.0.12"
-  },
-  "build": {
-    "appId": "ir.ritme.dailyplanner",
-    "productName": "Ritme",
-    "asar": true,
-    "files": ["index.html", "main.js", "package.json"],
-    "directories": { "output": "dist" },
-    "win": { "target": ["nsis", "portable"], "artifactName": "Ritme-${version}-${arch}.${ext}" },
-    "nsis": { "oneClick": false, "allowToChangeInstallationDirectory": true, "createDesktopShortcut": true, "createStartMenuShortcut": true },
-    "portable": { "artifactName": "Ritme-${version}-portable.${ext}" }
-  }
-}
+
+name: Build Windows EXE
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build Windows app
+        run: npm run dist -- --publish never
+        env:
+          CSC_IDENTITY_AUTO_DISCOVERY: "false"
+
+      - name: Upload EXE files
+        uses: actions/upload-artifact@v4
+        with:
+          name: Ritme-Windows-EXE
+          path: |
+            dist/*.exe
+          if-no-files-found: error
+          retention-days: 7
