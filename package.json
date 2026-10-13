@@ -1,0 +1,26 @@
+{
+  "name": "ritme-daily-planner",
+  "version": "1.1.0",
+  "description": "Persian RTL daily planner with separate statistics and backup tools",
+  "main": "main.js",
+  "author": "Ritme",
+  "license": "UNLICENSED",
+  "scripts": {
+    "start": "electron .",
+    "dist": "electron-builder --win nsis portable"
+  },
+  "devDependencies": {
+    "electron": "^38.2.0",
+    "electron-builder": "^26.0.12"
+  },
+  "build": {
+    "appId": "ir.ritme.dailyplanner",
+    "productName": "Ritme",
+    "asar": true,
+    "files": ["index.html", "main.js", "package.json"],
+    "directories": { "output": "dist" },
+    "win": { "target": ["nsis", "portable"], "artifactName": "Ritme-${version}-${arch}.${ext}" },
+    "nsis": { "oneClick": false, "allowToChangeInstallationDirectory": true, "createDesktopShortcut": true, "createStartMenuShortcut": true },
+    "portable": { "artifactName": "Ritme-${version}-portable.${ext}" }
+  }
+}
